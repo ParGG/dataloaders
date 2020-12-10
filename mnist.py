@@ -7,32 +7,68 @@ from torchvision import transforms
 # Dataset preparation
 class Mnist1DTransform(object):
   """
-  Converts an MNIST image to a sequence. Ouput shape: 28*28
+  Converts an MNIST image into a sequence.
   """
-  def __call__(self, sample):
-    return th.reshape(sample, [28*28])
+  def __call__(self,
+            sample: th.Tensor) -> th.Tensor:
+    """
+    args:
+        sample: tensor to be transformed
+
+    return:
+        tensor of shape: (28 * 28, )
+    """
+
+    return th.reshape(sample, [28 * 28])
 
 class MnistSeqTransform(object):
   """
-  Converts an MNIST image to a sequence. Ouput shape: 28*28,1
+  Converts an MNIST image into a sequence.
   """
-  def __call__(self, sample):
-    return th.reshape(sample, [28*28,1])
 
-def gen_dataloaders(data_ops, train_batch_size=8, val_batch_size=8, root_path = '.'):
-    train_dataset = torchvision.datasets.MNIST(root=root_path, 
-                                            train=True, 
-                                            download=True,
-                                            transform=transforms.Compose(data_ops))
+  def __call__(self,
+            sample: th.Tensor) -> th.Tensor:
+    """
+    args:
+        sample: tensor to be transformed
 
-    train_dataloader = utils.data.DataLoader(train_dataset, batch_size=train_batch_size, shuffle=True)
+    return:
+        tensor of shape: (28 * 28, 1)
+    """
 
-    val_dataset = torchvision.datasets.MNIST(root=root_path, 
-                                            train=False, 
-                                            download=True,
-                                            transform=transforms.Compose(data_ops))
+    return th.reshape(sample, [28 * 28, 1])
 
-    val_dataloader = utils.data.DataLoader(val_dataset, batch_size=val_batch_size, shuffle=True)
+def gen_dataloaders(data_ops: list,
+                    train_batch_size: int = 8,
+                    val_batch_size: int = 8,
+                    root_path: str = '.'):
+    """
+    Generates DataLoaders for the MNIST task. Each item is a tuple of the form:
+    (image, label).
+
+    args:
+        data_ops: list of functions which are applied to the loaded data
+        train_batch_size: batch size used for the dataloader for training
+        val_batch_size: batch size used for the dataloader for validation
+        root_path: path to the folder where the data are stored
+
+    return:
+        tuple(train_dataloader, validation_dataloaders)
+    """
+
+    train_dataset = torchvision.datasets.MNIST(root= root_path, 
+                                            train= True, 
+                                            download= True,
+                                            transform= transforms.Compose(data_ops))
+
+    train_dataloader = utils.data.DataLoader(train_dataset, batch_size= train_batch_size, shuffle= True)
+
+    val_dataset = torchvision.datasets.MNIST(root= root_path, 
+                                            train= False, 
+                                            download= True,
+                                            transform= transforms.Compose(data_ops))
+
+    val_dataloader = utils.data.DataLoader(val_dataset, batch_size= val_batch_size, shuffle= True)
 
     return train_dataloader, val_dataloader
 
