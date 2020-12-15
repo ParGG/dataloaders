@@ -35,16 +35,12 @@ class BaseDataLoader(object):
                 split_ratios: list = [50, 20, 30],
                 seed: int = None):
         
-        assert isintance("root_folder", str), "Invalid Root Folder"
+        assert isinstance("root_folder", str), "Invalid Root Folder"
         assert not os.path.exists(root_folder) and link is None, "Root Path does not exists and no Link has not been provided"
         assert "http" in link or link is None, "Invalid Link"
-        assert isinstance(bs, int) and bs > 0, "invalid Batch Size"
+        assert isinstance(batch_size, int) and batch_size > 0, "invalid Batch Size"
         assert isinstance(num_workers, int) and num_workers > -2, "Invalid Number of Workers"
         assert isinstance(seed, int) or seed is None, "Invalid Seed"
-
-        
-        
-
 
 def read_folder(self) -> list:
     """
@@ -79,4 +75,5 @@ def get_terminal_size(fallback: tuple = (80, 24)) -> int:
         break
     else:  # set default if the loop completes which means all failed
         columns, _ = fallback
+        
     return columns
